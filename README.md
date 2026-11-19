@@ -1,20 +1,20 @@
-# Lab 08 – Two Ways to Generate
+# Lab 08 Two Ways to Generate
 
 ## Project Overview
 
-This lab explores different generative models and compares how they generate handwritten digit images.
+In this lab, I explored different generative models and compared how well they can create handwritten digit images.
 
-The experiments use the professor's starter code and the provided dataset of 8 × 8 handwritten digit images. Each image is represented by 64 input features.
+The experiments use the dataset provided in the professor's starter code. Each image is 8 × 8 pixels and is represented by 64 input features.
 
-The lab covers five main parts:
+The lab is divided into five parts:
 
-1. GAN loss verification and generator gradient comparison.
-2. Standard GAN versus Wasserstein GAN with Gradient Penalty (WGAN-GP).
-3. Forward diffusion and digit generation using a diffusion model.
-4. Comparison of deterministic DDIM sampling with different numbers of sampling steps.
-5. Comparison of VAE, WGAN-GP, and diffusion models.
+1. Checking GAN loss calculations and comparing generator gradients.
+2. Comparing a standard GAN with WGAN-GP.
+3. Implementing forward diffusion and training a diffusion model to generate digit images.
+4. Comparing DDIM sampling with different numbers of steps.
+5. Comparing VAE, WGAN-GP, and diffusion models.
 
-The experiments use three random seeds (0, 1, and 2) to evaluate how results vary across runs.
+For the experiments that require multiple runs, I used three random seeds: 0, 1, and 2. This helped me see how the results changed between runs.
 
 ## Project Structure
 
@@ -45,43 +45,42 @@ Lab 08/
 
 ## Requirements and Environment
 
-The experiments were run using:
+The experiments were completed using:
 
 - Python 3.12
 - Anaconda environment: `ml-env`
 - PyTorch
-- CPU execution
-- The professor-provided `lab08_starter.py`
+- CPU
+- The professor-provided `lab08_starter.py` file
 
-The starter file provides the models, dataset loading functions, training utilities, and evaluation functions used in the experiments.
+The starter file contains the models, dataset loading functions, training functions, and evaluation methods used in this lab.
 
 ## How to Run
 
-Open PowerShell in the Lab 08 folder.
-
-Run the following command:
+Open PowerShell in the Lab 08 folder and run:
 
 ```powershell
 & "C:\Anaconda3\envs\ml-env\python.exe" lab08.py
 ```
 
-The script executes all five parts in sequence.
+The script runs all five parts in order.
 
-The generated CSV files are saved in the `results/` folder, and experiment figures are saved in the `figures/` folder.
+- CSV results are saved in the `results/` folder.
+- Figures and generated image samples are saved in the `figures/` folder.
 
-**Important:** Run the complete script from the beginning. Parts 4 and 5 reuse models trained in earlier parts, so running those parts independently will not reproduce the complete workflow.
+**Important:** Run the complete script from the beginning. Parts 4 and 5 use models trained in earlier parts, so they depend on those earlier experiments.
 
-## Part 1 – GAN Verification
+## Part 1 GAN Verification
 
-This part verifies the mathematical implementation of GAN losses and compares generator gradients.
+In this part, I checked the GAN loss calculations and compared the gradients produced by two generator loss functions.
 
-Experiments include:
+The experiments included:
 
-- Discriminator loss verification.
-- Minimax generator loss verification.
-- Non-saturating generator loss verification.
-- One-dimensional Gaussian discriminator training.
-- Comparison of minimax and non-saturating generator gradients.
+- Checking the discriminator loss.
+- Checking the minimax generator loss.
+- Checking the non-saturating generator loss.
+- Training a discriminator on a one-dimensional Gaussian dataset.
+- Comparing the gradients from the minimax and non-saturating losses.
 
 ### Results
 
@@ -96,17 +95,15 @@ Experiments include:
 
 All three loss verification checks passed.
 
-The non-saturating generator loss produced a substantially stronger gradient than the minimax loss in this experiment.
+The non-saturating loss produced a much stronger generator gradient than the minimax loss in this experiment. This shows why the choice of loss function can make a difference during GAN training.
 
-## Part 2 – Standard GAN vs WGAN-GP
+## Part 2 Standard GAN vs WGAN-GP
 
-This part compares a standard GAN with a Wasserstein GAN using Gradient Penalty.
+In this part, I compared a standard GAN with a Wasserstein GAN using Gradient Penalty (WGAN-GP).
 
-Both models were evaluated using seeds 0, 1, and 2.
+Both models were tested with three random seeds: 0, 1, and 2. Each experiment used 4,000 training steps and generated 359 samples for evaluation.
 
-The experiments use 4,000 generator training steps and generate 359 samples for evaluation.
-
-The WGAN-GP experiment also monitors critic gradient norms and score gaps.
+I also checked the critic's gradient norms and score gaps during WGAN-GP training.
 
 ### Results
 
@@ -119,26 +116,28 @@ The WGAN-GP experiment also monitors critic gradient norms and score gaps.
 | WGAN-GP | 1 | 4.2847 | 0.7799 | 0.9136 | 10 |
 | WGAN-GP | 2 | 3.9563 | 0.7549 | 0.9053 | 10 |
 
-### Observation
+### What I Observed
 
-WGAN-GP achieved substantially lower Fréchet distances and higher recall than the standard GAN across all three seeds.
+WGAN-GP performed better than the standard GAN in all three runs.
 
-It also generated samples covering all ten digit classes in each run.
+It had much lower Fréchet distances and higher recall. It also generated samples covering all ten digit classes in every run.
 
-The results suggest that WGAN-GP provided more stable generation and better coverage in these experiments.
+The standard GAN had difficulty covering the digit classes, especially in seeds 1 and 2, where its recall was zero.
 
-## Part 3 – Diffusion Model
+Based on these results, WGAN-GP gave better results and more consistent digit coverage in this experiment.
 
-This part implements forward diffusion and trains a noise-prediction model.
+## Part 3 Diffusion Model
 
-The experiments include:
+In this part, I implemented forward diffusion and trained a model to predict the noise added to the images.
 
-- Verification of iterative and closed-form forward diffusion distributions.
-- A diffusion experiment using a ring of Gaussian distributions.
-- Digit generation using a diffusion model.
-- Evaluation across three random seeds.
+The experiments included:
 
-The digit diffusion model uses 100 diffusion steps and generates 359 samples per seed.
+- Comparing iterative and closed-form forward diffusion.
+- Testing diffusion on a ring of Gaussian distributions.
+- Training a diffusion model to generate handwritten digits.
+- Evaluating the results using three random seeds.
+
+The digit diffusion model used 100 diffusion steps and generated 359 samples for each seed.
 
 ### Forward Diffusion Results
 
@@ -148,7 +147,7 @@ The digit diffusion model uses 100 diffusion steps and generates 359 samples per
 | 50 | 0.7992 | 0.7951 | 0.8476 | 0.8436 |
 | 100 | 0.1138 | 0.1104 | 1.0006 | 0.9992 |
 
-Final alpha-bar: 0.00561876.
+Final alpha-bar: `0.00561876`
 
 ### Digit Diffusion Results
 
@@ -161,31 +160,31 @@ Final alpha-bar: 0.00561876.
 ### Ring Diffusion Results
 
 - Modes covered: 8 out of 8.
-- Share of generated samples near a mode: 0.9700.
+- Generated samples near a mode: 0.9700.
 
-### Observation
+### What I Observed
 
-The noise-prediction loss decreased considerably during training.
+The noise prediction loss decreased during training, which shows that the model improved at predicting the added noise.
 
-The model also generated samples covering all ten digit classes across the three seeds.
+The digit generation experiments also covered all ten digit classes across the three runs.
 
-The ring experiment covered all eight modes, indicating good coverage of the target distribution.
+In the ring experiment, the model covered all eight modes, and 97% of generated samples were near one of the modes.
 
-## Part 4 – Diffusion Sampling Comparison
+## Part 4 Diffusion Sampling Comparison
 
-This part compares deterministic DDIM sampling using different numbers of steps.
+In this part, I compared deterministic DDIM sampling using different numbers of steps.
 
-The tested sampling step counts are:
+The tested step counts were:
 
-- 5
-- 10
-- 25
-- 50
-- 100
+- 5 steps
+- 10 steps
+- 25 steps
+- 50 steps
+- 100 steps
 
-The deterministic sampler is also compared with the ancestral 100-step sampler.
+I also compared DDIM with the ancestral sampler using 100 steps.
 
-All comparisons use three random seeds and 359 generated samples per experiment.
+Each experiment used three random seeds and generated 359 samples.
 
 ### Deterministic DDIM Results
 
@@ -195,27 +194,27 @@ All comparisons use three random seeds and 359 generated samples per experiment.
 | 1 | 12.5535 | 11.2997 | 12.3360 | 12.6373 | 12.7955 |
 | 2 | 15.0473 | 14.0281 | 14.3735 | 14.5940 | 14.7249 |
 
-Values represent Fréchet distance. Lower values indicate better results.
+The values represent Fréchet distance. Lower values indicate better results.
 
-### Observation
+### What I Observed
 
-The results show that fewer DDIM sampling steps can reduce sampling time considerably.
+Using fewer DDIM steps can reduce the time needed to generate samples.
 
-The best Fréchet result differed across seeds. Therefore, the results do not establish that one sampling step count is always the best choice.
+However, the best result was not the same for every seed. Five steps gave the lowest Fréchet distance for seed 0, while ten steps gave the lowest result for seeds 1 and 2.
 
-The comparison also shows that deterministic DDIM and ancestral sampling can produce different evaluation results, even when both use 100 steps.
+This means that fewer steps can work well, but the results depend on the run. The comparison also showed that DDIM and ancestral sampling can produce different results, even when both use 100 steps.
 
-## Part 5 – VAE vs WGAN-GP vs Diffusion
+## Part 5 VAE vs WGAN-GP vs Diffusion
 
-This part compares three generative model families:
+In the final part, I compared three different models:
 
 - Variational Autoencoder (VAE)
 - Wasserstein GAN with Gradient Penalty (WGAN-GP)
 - Diffusion model
 
-The comparison uses seeds 0, 1, and 2, with 359 generated samples per model and seed.
+Each model was tested using seeds 0, 1, and 2, with 359 generated samples per run.
 
-The same feature-network evaluation approach is used for the three models within each seed.
+For each seed, I used the same feature network and test data to evaluate the three models.
 
 ### Average Results Across Three Seeds
 
@@ -228,34 +227,32 @@ The same feature-network evaluation approach is used for the three models within
 | TV Distance | 0.1411 | 0.0799 | 0.1495 |
 | Average Training Time (seconds) | 1.04 | 126.57 | 11.82 |
 
-Lower Fréchet distance, TV distance, and nearest-training distance indicate better results for those metrics. Higher precision and recall are generally preferred.
+### What I Observed
 
-### Observation
+WGAN-GP achieved the lowest average Fréchet distance and TV distance. It also had the highest recall, meaning it covered more of the real data distribution.
 
-WGAN-GP achieved the lowest average Fréchet distance and TV distance, along with the highest recall.
+VAE had the highest precision, but its recall was much lower. This means its generated samples were closer to the real data in some respects, but it did not cover as much variety.
 
-VAE achieved the highest precision but had considerably lower recall.
+The diffusion model had better recall than VAE, but its Fréchet distance was higher than WGAN-GP's.
 
-The diffusion model achieved better recall than VAE but did not match WGAN-GP on Fréchet distance in these experiments.
+WGAN-GP took much longer to train than the other two models.
 
-WGAN-GP required more training time than the other two models.
-
-Overall, WGAN-GP provided the strongest balance of sample quality and diversity in this comparison.
+Overall, WGAN-GP gave the best results across most of the evaluation metrics, although it required more training time.
 
 ## Evaluation Metrics
 
-The experiments use the following evaluation metrics:
+I used the following metrics to compare the generated samples:
 
-- **Fréchet Distance:** Measures the difference between feature distributions of real and generated samples. Lower is better.
-- **Precision:** Measures how many generated samples fall within the real-data feature distribution. Higher is better.
-- **Recall:** Measures how well generated samples cover the real-data feature distribution. Higher is better.
-- **Nearest Training Distance:** Measures the distance between generated samples and their nearest training samples.
-- **Distinct Digit Classes:** Counts the number of different predicted digit classes among generated samples.
-- **Total Variation (TV) Distance:** Measures the difference between real and generated digit-class distributions. Lower is better.
-- **Training Time:** Measures the time taken to train each model.
-- **Sampling Time:** Measures the time required to generate samples.
+- **Fréchet Distance:** Compares the feature distributions of real and generated samples. Lower values are better.
+- **Precision:** Measures how many generated samples are close to the real-data distribution. Higher values are better.
+- **Recall:** Measures how well generated samples cover the real-data distribution. Higher values are better.
+- **Nearest Training Distance:** Measures the distance between generated samples and their closest training samples.
+- **Distinct Digit Classes:** Counts how many different digit classes appear in the generated samples.
+- **Total Variation (TV) Distance:** Measures the difference between the real and generated digit-class distributions. Lower values are better.
+- **Training Time:** Measures how long the model takes to train.
+- **Sampling Time:** Measures how long it takes to generate samples.
 
-For TV distance, the calculation is:
+The TV distance is calculated as:
 
 \[
 TV(P,Q)=\frac{1}{2}\sum_i |P(i)-Q(i)|
@@ -263,44 +260,47 @@ TV(P,Q)=\frac{1}{2}\sum_i |P(i)-Q(i)|
 
 ## Predictions Before Experiments
 
-The following were the expected outcomes before comparing the models:
+Before running the experiments, I expected the following results:
 
-1. The non-saturating generator loss was expected to provide stronger gradients than the minimax loss when the discriminator became confident.
-2. WGAN-GP was expected to provide more stable training and better sample coverage than the standard GAN.
-3. Diffusion training loss was expected to decrease as the model learned to predict added noise.
-4. DDIM sampling with fewer steps was expected to reduce sampling time, although image quality could change.
-5. WGAN-GP, VAE, and diffusion were expected to show different trade-offs between sample quality, diversity, and computational cost.
+1. The non-saturating generator loss would produce stronger gradients than the minimax loss when the discriminator became confident.
+2. WGAN-GP would have more stable training and better digit coverage than the standard GAN.
+3. The diffusion training loss would decrease as the model learned to predict the added noise.
+4. Using fewer DDIM steps would reduce sampling time, although the generated image quality might change.
+5. VAE, WGAN-GP, and diffusion would have different results in terms of image quality, sample variety, and training time.
 
-These expectations were compared with the experimental results.
+After running the experiments, I compared these expectations with the actual results. Most of the results followed the expected patterns, especially the stronger performance of WGAN-GP compared with the standard GAN.
 
 ## Limitations
 
-- Experiments were conducted on a small 8 × 8 handwritten digit dataset.
-- Results may differ on larger and more complex image datasets.
-- Only three random seeds were used, so the experiments do not capture every possible training outcome.
-- Training and sampling times depend on the execution environment.
-- Evaluation metrics provide useful comparisons but do not fully represent visual image quality.
-- Generated digit classes are predicted using a trained feature network, so class-distribution results depend on that network's predictions.
+There are some limitations to these experiments:
+
+- The dataset contains small 8 × 8 handwritten digit images, so the results may be different with larger images.
+- I used only three random seeds. More runs would give a better idea of how much the results can change.
+- Training and sampling times depend on the computer and hardware used.
+- Evaluation metrics are useful for comparing models, but they cannot fully measure how good the generated images look.
+- The predicted digit classes depend on the trained feature network, so classification errors can affect the results.
 
 ## Reproducibility
 
-- The professor-provided `lab08_starter.py` file was kept unchanged.
-- All five parts are executed through `lab08.py`.
-- Random seeds 0, 1, and 2 are used for the multi-seed experiments.
-- Experiment results are saved as CSV files.
-- Generated sample grids and plots are saved in the `figures/` folder.
-- The `.gitignore` file excludes files that should not be committed.
+I followed these steps to make the experiments easier to run again:
 
-To reproduce the experiments, use the same Python environment and run the command provided in the setup section.
+- Kept the professor-provided `lab08_starter.py` file unchanged.
+- Put all five parts in `lab08.py`.
+- Used random seeds 0, 1, and 2 for the multi-run experiments.
+- Saved the experiment results as CSV files in the `results/` folder.
+- Saved generated image grids and plots in the `figures/` folder.
+- Added a `.gitignore` file to exclude unnecessary files.
+
+To run the experiments again, use the same Python environment and run the command in the **How to Run** section.
 
 ## Conclusion
 
-This lab explored GANs, WGAN-GP, diffusion models, DDIM sampling, and VAEs.
+In this lab, I worked with GANs, WGAN-GP, diffusion models, DDIM sampling, and VAEs.
 
-The experiments demonstrated the importance of loss functions, gradient behaviour, sampling methods, and model architecture in generative modelling.
+I learned how different loss functions affect generator training and how the number of diffusion steps affects sampling. I also compared the models using the same evaluation approach.
 
-Across the three model families tested in Part 5, WGAN-GP achieved the strongest overall evaluation results, while VAE showed higher precision and diffusion provided a different balance between diversity and generation time.
+Based on my results, WGAN-GP performed best overall in the final comparison. VAE achieved higher precision, while diffusion provided a different balance between sample coverage and training time.
 
-The experiments also showed that sampling speed and sample quality can vary with the number of diffusion steps.
+The experiments also showed that results can change between random seeds, so it is important to compare more than one run.
 
-All five parts were executed successfully, and the results and figures were saved for review.
+All five parts were executed successfully, and the results and figures were saved in their respective folders.
