@@ -143,7 +143,7 @@ I compared the results using Fréchet distance, precision, recall, and the numbe
 | WGAN-GP | 1 | 4.2847 | 0.7799 | 0.9136 | 10 |
 | WGAN-GP | 2 | 3.9563 | 0.7549 | 0.9053 | 10 |
 
-### WGAN-GP training checks
+### WGAN GP training checks
 
 I also checked the critic's gradient norm and score gap during training.
 
@@ -243,7 +243,7 @@ The DDIM configurations used were:
 
 I used three random seeds for the comparison.
 
-### Fréchet distance results
+### Frechet distance results
 
 | Seed | 5 Steps | 10 Steps | 25 Steps | 50 Steps | 100 Steps |
 |---|---:|---:|---:|---:|---:|
@@ -273,7 +273,7 @@ The ancestral 100-step sampling times were:
 
 In these experiments, the 5-step DDIM configuration took less time than the 100-step configuration. The exact sampling time varied between seeds. The results show that DDIM can generate samples with fewer steps, which can reduce the time needed for sampling.
 
-## Part 5 Comparing VAE, WGAN-GP, and Diffusion
+## Part 5 Comparing VAE, WGAN GP, and Diffusion
 
 In the final part, I compared three models:
 
